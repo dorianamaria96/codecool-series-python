@@ -1,0 +1,9 @@
+Create a page with a dropdown list containing all the different show titles that have more than 5 related genres. List them in chronological order.
+There should be an option at the top saying "-- Not selected --".
+When you change the selection of this dropdown, you should see the detailed information of the selected show, displaying the following data:
+- production year
+- 25th anniversary (highlight it if that year is in the past)
+- number of seasons (do NOT count specials)
+- rounded up rating represented as an asterisk (*) characters (e.g. the value 3.7 will show 4 asterisks: **)
+The page must NOT be reloaded during the search.
+If the "-- Not selected --" option is selected, it should clear all the data.

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <title>Shows</title>
+
+    <!-- Import Montserrat font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <!-- Normalize.css fixes lot of differences between browsers default styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"/>
+
+    <!-- project wide styling -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/site.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/background.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/button.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/card.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/table.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/utils.css') }}">
+
+    <!-- page specific styling -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/detailed-view.css') }}">
+</head>
+<body>
+    <div id="body-wrapper">
+    <header class="clearfix">
+        <img id="header-logo" src="{{ url_for('static', filename='assets/codecool-logo.png') }}" alt="Codecool Logo">
+        <span id="header-title" class="title">
+                    Codecool Series Database
+                </span>
+        <div id="header-auth">
+            <button type="button" id="bt-register">Register</button>
+            <button type="button" id="bt-login">Login</button>
+        </div>
+    </header>
+    <section>
+
+        <h1 class="title text-center">Shows</h1>
+
+        <div class="card">
+            The 15 most rated TV Shows are:
+            <table>
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Year</th>
+                    <th>Runtime (min)</th>
+                    <th>Rating</th>
+                    <th>Genres</th>
+                    <th>Trailer</th>
+                    <th>Homepage</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+
+                    {% for show in most_rated_shows %}
+                    <td><a href="/show/{{ show.id }}">{{ show.title }}</a></td>
+                    <td>{{ show.release_year }}</td>
+                    <td>{{ show.average_runtime_length }}</td>
+                    <td>{{ show.rating }}</td>
+                    <td>{{ show.genres }}</td>
+                        {% if show.trailer == None %}
+                            <td>No URL</td>
+                        {% else %}
+                            <td><a href="{{ show.trailer }}">Trailer URL</a></td>
+                        {% endif %}
+                        {% if show.homepage == None %}
+                            <td>No URL</td>
+                        {% else %}
+                            <td><a href="{{ show.homepage }}">Trailer URL</a></td>
+                        {% endif %}
+
+                </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        <br><br>
+
+            <div class="card">
+               <div class="pagination">
+                    <a href=""><<</a>
+                    {% for page in range(1, pages_number - 1) %}
+                    <a href="/shows/most-rated/?page_number={{ page }}">{{ page }}</a>
+                    {% endfor %}
+                    <a href="">>></a>
+               </div>
+            </div>
+        </div>
+
+
+    </section>
+    <footer>
+        Copyright, bla-bla
+    </footer>
+</div>
+<div class="background">
+    <div class="dark-blue-layer"></div>
+    <div class="light-blue-layer"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    {% for show in show_details %}
+    <title>{{ show.title }}</title>
+    {% endfor %}
+
+    <script src="/static/js/embed-youtube.js"></script>
+    <!-- Import Montserrat font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <!-- Normalize.css fixes lot of differences between browsers default styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"/>
+
+    <!-- project wide styling -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/site.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/background.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/button.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/card.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/table.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/utils.css') }}">
+
+    <!-- page specific styling -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/detailed-view.css') }}">
+</head>
+<body>
+    <div id="body-wrapper">
+    <header class="clearfix">
+        <img id="header-logo" src="{{ url_for('static', filename='assets/codecool-logo.png') }}" alt="Codecool Logo">
+        <span id="header-title" class="title">
+                    Codecool Series Database
+                </span>
+        <div id="header-auth">
+            <button type="button" id="bt-register">Register</button>
+            <button type="button" id="bt-login">Login</button>
+        </div>
+    </header>
+    <section>
+        {% for show in show_details %}
+        <h1 class="title text-center">{{ show.title }}</h1>
+
+        <div class="card detailed-view">
+            <div class="row">
+                <div class="col col-third">
+                {% if show.trailer != None %}
+                <div id="{{ video_id }}" class="video"></div>
+                <div id="player"></div>
+                <script>
+                    var tag = document.createElement('script');
+                    const videoId = document.querySelector('.video').id
+                    tag.src = "https://www.youtube.com/iframe_api";
+                    var firstScriptTag = document.getElementsByTagName('script')[0];
+                    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+                    var player;
+                    function onYouTubeIframeAPIReady() {
+                      player = new YT.Player('player', {
+                        height: '270',
+                        width: '480',
+                        videoId: videoId,
+                        events: {
+                          'onReady': onPlayerReady,
+                          'onStateChange': onPlayerStateChange
+                        }
+                      });
+                    }
+                    function onPlayerReady(event) {
+                      event.target.playVideo();
+                    }
+                    var done = false;
+                    function onPlayerStateChange(event) {
+                      if (event.data == YT.PlayerState.PLAYING && !done) {
+                        setTimeout(stopVideo, 6000);
+                        done = true;
+                      }
+                    }
+                    function stopVideo() {
+                      player.stopVideo();
+                    }
+                </script>
+                {% endif %}
+                </div>
+
+                <div class="col col-twothird">
+                    <h2>{{ show.title }}</h2>
+                    {% if show.runtime > 60 %}
+                    {% set hour = 60 %}
+                    <p class="small grayed"> {{ show.runtime // hour }}h {{ show.runtime % hour  }}min <span class="separator">|</span> {{ show.genres }} <span
+                            class="separator">|</span> {{ show.rating }} ☆ </p>
+                    {% else %}
+                    <p class="small grayed"> {{ show.runtime }}min <span class="separator">|</span> {{ show.genres }} <span
+                            class="separator">|</span> {{ show.rating }} ☆ </p>
+                    {% endif %}
+
+
+                    <p>{{ show.overview }}</p>
+                </div>
+            </div>
+            <div>
+                <p>
+                    <b>Stars:</b>
+                    {% for i in range(actors|length) %}
+                        <a href="#"> {{ actors[i].name }} |</a>
+                    {% endfor %}
+                </p>
+
+            </div>
+        </div>
+        {% endfor %}
+        <br><br>
+        <div class="card">
+            Seasons:
+            <table>
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Overview</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    {% for season in seasons %}
+                    <td style="min-width: 60px">{{ season.season_number }}</td>
+                    <td style="min-width: 100px">{{ season.title }}</td>
+                        {% if season.overview != None %}
+                    <td>{{ season.overview }}</td>
+                        {% else %}
+                    <td> No overview </td>
+                        {% endif %}
+
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+    </section>
+    <footer>
+        Copyright, bla-bla
+    </footer>
+</div>
+<div class="background">
+    <div class="dark-blue-layer"></div>
+    <div class="light-blue-layer"></div>
+</div>
+</body>
+</html>
